@@ -82,6 +82,7 @@ export default {
         },
         //上传服务器
         async startUpload() {
+            debugger
             //判断是否有文件再上传
             if (this.fileList.length === 0) {
                 return this.$Message.warning('请选取文件后再上传')
