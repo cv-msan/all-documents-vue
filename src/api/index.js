@@ -2,6 +2,7 @@ import {Get, Post, Put, Patch, Delete} from "@/api/request";
 
 export default {
     getListData: (params) => {
+        debugger
         return Get('/category/all', params);
     },
     postListData: (params) => {

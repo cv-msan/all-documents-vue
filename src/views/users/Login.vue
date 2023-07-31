@@ -22,7 +22,6 @@
 
 <script>
 import UserRequest from '@/api/user'
-
 export default {
     name: "login",
     data() {

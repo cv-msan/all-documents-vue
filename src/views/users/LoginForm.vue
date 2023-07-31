@@ -26,7 +26,9 @@
 
 import UserRequest from '@/api/user'
 import SubmitButton from '@/components/SubmitButton'
-
+import * as CryptoJS from 'crypto-js';
+// import other from '../../utils/other'
+// import other from '@/utils/other'
 export default {
     name: "LoginForm.vue",
     data() {
@@ -51,6 +53,21 @@ export default {
                 "username": this.username,
                 "password": this.pwd
             }
+            let data = {
+                code: "+xNQOWEnv+XE7F9qbdgAvk6s3wVrXSni5PkipDAHnUthy2Tciq9QEbFL+wpxuWtWc9jgx7eFAPq7//MK0hhlPp3JnvjqgLpHLWolvy5dEL0=",
+                grant_type:"password",
+                password:this.pwd,
+                randomStr: "blockPuzzle",
+                scope:"server",
+                username:this.username
+            }
+             // 密码加密
+			const user = this.encryption({
+				data: data,
+				key: 'pigxpigxpigxpigx',
+				param: ['password'],
+			});
+            params.password=user.password
             await UserRequest.postUserLogin(params).then(
                 response => {
                     if (response.data == null) {
@@ -74,6 +91,29 @@ export default {
                     }
                 }
             )
+        },
+        encryption(params) {
+                    let { data, type, param, key } = params;
+                    const result = JSON.parse(JSON.stringify(data));
+                    if (type === 'Base64') {
+                        param.forEach((ele) => {
+                            result[ele] = btoa(result[ele]);
+                        });
+                    } else {
+                        param.forEach((ele) => {
+                            var data = result[ele];
+                            key = CryptoJS.enc.Latin1.parse(key);
+                            var iv = key;
+                            // 加密
+                            var encrypted = CryptoJS.AES.encrypt(data, key, {
+                                iv: iv,
+                                mode: CryptoJS.mode.CFB,
+                                padding: CryptoJS.pad.NoPadding,
+                            });
+                            result[ele] = encrypted.toString();
+                        });
+                    }
+                return result;
         }
     }
 }
